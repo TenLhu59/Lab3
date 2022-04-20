@@ -37,7 +37,6 @@ void loop() {
   Serial.print(dt.hour);   Serial.print(":");
   Serial.print(dt.minute); Serial.print(":");
   Serial.print(dt.second); Serial.println("");
-
   
 // Code that starts the motor at new minute and stops after 30 secs
 // Only runs in Clockwise direction.
@@ -45,28 +44,53 @@ void loop() {
     Serial.println("PWM stop");
     lcd.setCursor(0, 0);
     lcd.print("Time:");
-    lcd.print(dt.hour);
+    if (dt.hour < 10) {
+      lcd.print("0");
+      lcd.print(dt.hour);
+    }
+    else
+      lcd.print(dt.hour);
     lcd.print(":");
-    lcd.print(dt.minute);
+    if (dt.minute < 10){
+      lcd.print("0");
+      lcd.print(dt.minute);
+    }
+    else
+      lcd.print(dt.minute);
     lcd.print(":");
     lcd.print(dt.second);
     
     lcd.setCursor(0, 1);
-    lcd.print("Dir:C Speed:0   ");
+    lcd.print("Dir:C Spd:0   ");
     analogWrite(ENABLE,LOW); 
   }
   else if (dt.second >= 0){
     Serial.println("PWM full speed");
     lcd.setCursor(0, 0);
     lcd.print("Time:");
-    lcd.print(dt.hour);
+    if (dt.hour < 10) {
+      lcd.print("0");
+      lcd.print(dt.hour);
+    }
+    else
+      lcd.print(dt.hour);
     lcd.print(":");
-    lcd.print(dt.minute);
+    if (dt.minute < 10){
+      lcd.print("0");
+      lcd.print(dt.minute);
+    }
+    else
+      lcd.print(dt.minute);
     lcd.print(":");
-    lcd.print(dt.second);
+    if (dt.second < 10){
+      lcd.print("0");
+      lcd.print(dt.second);
+    }
+    else
+      lcd.print(dt.second);
     
     lcd.setCursor(0, 1);
-    lcd.print("Dir:C Speed:Full");
+    lcd.print("Dir:C Spd:Full");
     //---PWM example, full speed then slow
     analogWrite(ENABLE,255); //enable on
     digitalWrite(DIRA,HIGH); //one way
@@ -74,21 +98,6 @@ void loop() {
     //delay(2000); 
   }
   delay(1000);
-  /*
-  analogWrite(ENABLE,180); //half speed
-  delay(2000);
-  analogWrite(ENABLE,128); //half speed
-  delay(2000);
-  analogWrite(ENABLE,50); //half speed
-  delay(2000);
-  analogWrite(ENABLE,128); //half speed
-  delay(2000);
-  analogWrite(ENABLE,180); //half speed
-  delay(2000);
-  analogWrite(ENABLE,255); //half speed
-  delay(2000);
-  digitalWrite(ENABLE,LOW); //all done
-  delay(10000);*/
   
 }
    
