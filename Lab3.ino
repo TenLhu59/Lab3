@@ -7,16 +7,18 @@ LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
 #define ENABLE 5
 #define DIRA 3
 #define DIRB 4
+#define button 19
 
 DS3231 clock;
 RTCDateTime dt;
-int i;
+int x = 0;
  
 void setup() {
   //---set pin direction
   pinMode(ENABLE,OUTPUT);
   pinMode(DIRA,OUTPUT);
   pinMode(DIRB,OUTPUT);
+  pinMode(button, INPUT_PULLUP);
   Serial.println("Initialize RTC module");
   // Initialize DS3231
   clock.begin();
@@ -40,33 +42,40 @@ void loop() {
   
 // Code that starts the motor at new minute and stops after 30 secs
 // Only runs in Clockwise direction.
+  if (digitalRead(button) == LOW) {
+    buttonPress();
+  }
+
   if (dt.second >= 30) {
     Serial.println("PWM stop");
-    lcd.setCursor(0, 0);
-    lcd.print("Time:");
-    if (dt.hour < 10) {
-      lcd.print("0");
-      lcd.print(dt.hour);
-    }
-    else
-      lcd.print(dt.hour);
-    lcd.print(":");
-    if (dt.minute < 10){
-      lcd.print("0");
-      lcd.print(dt.minute);
-    }
-    else
-      lcd.print(dt.minute);
-    lcd.print(":");
-    lcd.print(dt.second);
+    printTime();
     
-    lcd.setCursor(0, 1);
-    lcd.print("Dir:C Spd:0   ");
+    if (x == 0)
+      clockwise();
+    else
+      CC();
+      
+    lcd.print("SPD:0   ");
     analogWrite(ENABLE,LOW); 
   }
   else if (dt.second >= 0){
     Serial.println("PWM full speed");
-    lcd.setCursor(0, 0);
+    printTime();
+    
+    if (x == 0)
+      clockwise();
+    else
+      CC();
+      
+    lcd.print("SPD:FULL");
+  }
+    
+  delay(500);
+  
+}
+
+void printTime(){
+  lcd.setCursor(0, 0);
     lcd.print("Time:");
     if (dt.hour < 10) {
       lcd.print("0");
@@ -90,14 +99,26 @@ void loop() {
       lcd.print(dt.second);
     
     lcd.setCursor(0, 1);
-    lcd.print("Dir:C Spd:Full");
+}
+
+void buttonPress() {
+  x++;
+  x = x % 2;
+}
+
+void clockwise() {
+  lcd.print("Dir:C  ");
     //---PWM example, full speed then slow
     analogWrite(ENABLE,255); //enable on
     digitalWrite(DIRA,HIGH); //one way
     digitalWrite(DIRB,LOW);
-    //delay(2000); 
-  }
-  delay(1000);
-  
+}
+
+void CC() {
+  lcd.print("Dir:CC ");
+    //---PWM example, full speed then slow
+    analogWrite(ENABLE,255); //enable on
+    digitalWrite(DIRA,LOW); //one way
+    digitalWrite(DIRB,HIGH);
 }
    
