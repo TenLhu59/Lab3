@@ -3,10 +3,10 @@
 #include <DS3231.h>
 #include <LiquidCrystal.h>
 
-LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
-#define ENABLE 5
-#define DIRA 3
-#define DIRB 4
+LiquidCrystal lcd(2, 3, 4, 5, 6, 7);
+#define ENABLE 13
+#define DIRA 12
+#define DIRB 11
 #define button 19
 
 DS3231 clock;
